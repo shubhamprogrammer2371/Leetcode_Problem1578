@@ -1,0 +1,91 @@
+int minCost(char* colors, int* neededTime, int neededTimeSize) {
+    int cost = 0 , max_time , total_time;
+    for (int i = 0 ; i < neededTimeSize ; i++) 
+    {
+        if (i && (colors[i] == colors[i - 1]))
+        {
+            char counter = colors[i];
+            max_time = total_time = neededTime[i - 1];
+            while ((i < neededTimeSize) && (colors[i] == counter))
+            {
+                max_time = fmax(max_time,neededTime[i]);
+                total_time += neededTime[i++];
+            }
+            cost += total_time - max_time;
+        }
+    }
+    return cost;
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+int calCost(int index, int continueLen, int* neededTime){
+    int max = neededTime[index] , sum = 0;
+    for(int i = index ; i < (index + continueLen) ; i++)
+    {
+        sum += neededTime[i];
+        max = (((i + 1) < (index + continueLen)) && (neededTime[i + 1] > max)) ? neededTime[i + 1] : max;
+    }
+    return (sum - max);
+}
+int minCost(char* colors, int* neededTime, int neededTimeSize){
+    int continueLen = 1 , index = 0 , minCost = 0;
+    for(int i = 0 ; i < neededTimeSize ; i++)
+    {
+        if(colors[i]  == colors[i + 1])
+            index = i - ((++continueLen) - 2);
+        else
+        {
+            if(continueLen != 1)
+                minCost += calCost(index, continueLen, neededTime);
+            continueLen = 1;
+        }
+    }
+    return minCost;
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+int minCost(char * colors, int* neededTime, int neededTimeSize){
+    int count = 0 , m = 0, n = 1;
+    while(n < strlen(colors)) 
+    {
+        if(colors[m] == colors[n]) 
+        {
+            if(neededTime[m] < neededTime[n]) 
+            {
+                count += neededTime[m];
+                m = n++;
+            }
+            else 
+                count += neededTime[n++];
+        }
+        else 
+            m = n++;
+    }
+    return count; 
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+int minCost(char * colors, int* neededTime, int neededTimeSize){
+    int total_time = 0 , i = 0 , j = 0;
+    while (j < neededTimeSize) 
+    {
+        int curr_total = 0 , curr_max = 0;
+        while ((j < neededTimeSize) && (colors[i] == colors[j])) 
+        {
+            curr_total += neededTime[j];
+            curr_max = fmax(curr_max, neededTime[j++]);
+        }
+        total_time += curr_total - curr_max;
+        i = j;
+    }
+    return total_time;
+}
